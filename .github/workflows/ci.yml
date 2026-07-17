@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  spec:
+    name: spec (${{ matrix.ruby }})
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental || false }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - "3.1"
+          - "3.4"
+          - "jruby-9.4"
+          - "jruby-10.0"
+        include:
+          # Bleeding-edge runtime: exercised, but allowed to fail so a
+          # not-yet-released or in-flight toolchain never blocks a PR.
+          - ruby: "4.0"
+            experimental: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run specs
+        run: bundle exec rake spec
