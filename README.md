@@ -4,7 +4,7 @@
 
 Custom RuboCop yml files to modify the cops enforced by RuboCop, shared across projects.
 
-Built on RuboCop `~> 1.91.0`, rubocop-rails `~> 2.38.0`, and rubocop-performance `~> 1.27.0`. Requires Ruby `>= 3.1`.
+Built on RuboCop, rubocop-rails, and rubocop-performance. [`mad_rubocop.gemspec`](mad_rubocop.gemspec) pins their versions and the minimum Ruby; [`CHANGELOG.md`](CHANGELOG.md) records the changes in each release.
 
 ## What's in the box
 

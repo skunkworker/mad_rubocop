@@ -15,9 +15,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/mxenabled/mad_rubocop"
   spec.license       = "MIT"
 
-  # Ship only what consumers load via `inherit_gem`; bin/setup is a dev script, not an executable.
+  # Ship only what consumers load via `inherit_gem`; bin/setup is a dev script and stays out.
   spec.files         = Dir.glob(%w(.rubocop.yml lib/**/*.{rb,yml} CHANGELOG.md LICENSE.txt README.md), :base => __dir__)
-  spec.executables   = []
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 3.1"

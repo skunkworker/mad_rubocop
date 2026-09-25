@@ -19,7 +19,7 @@ RSpec.describe "MadRubocop configuration" do
   cop_config_files = {
     "disabled_cops.yml" => File.join(root, "lib", "disabled_cops.yml"),
     "modified_cops.yml" => File.join(root, "lib", "modified_cops.yml"),
-  }.freeze
+  }
 
   # Loading the config also loads the rubocop-rails / rubocop-performance
   # plugins declared under `plugins:`, which registers their cops globally.
@@ -62,27 +62,23 @@ RSpec.describe "MadRubocop configuration" do
   it "runs against a fixture without emitting obsolete/removed-cop warnings" do
     fixture = File.join(root, "spec", "fixtures", "sample.rb")
 
-    # Capture both streams: warnings go to $stderr, and the formatter's
-    # report goes to $stdout, which would otherwise leak into spec output.
-    captured_stdout = StringIO.new
-    captured_stderr = StringIO.new
-    original_stdout = $stdout
+    # Warnings go to $stderr; `--out File::NULL` keeps the formatter's report
+    # out of the spec output.
+    captured = StringIO.new
     original_stderr = $stderr
-    $stdout = captured_stdout
-    $stderr = captured_stderr
+    $stderr = captured
     begin
       status = RuboCop::CLI.new.run(
-        ["--config", config_file, "--force-exclusion", "--no-color", fixture],
+        ["--config", config_file, "--force-exclusion", "--no-color", "--out", File::NULL, fixture],
       )
     ensure
-      $stdout = original_stdout
       $stderr = original_stderr
     end
 
     # A removed cop or an invalid config aborts the run with STATUS_ERROR;
     # offenses in the fixture (STATUS_OFFENSES) are fine.
-    expect(status).not_to eq(RuboCop::CLI::STATUS_ERROR), captured_stderr.string
-    expect(captured_stderr.string).not_to match(
+    expect(status).not_to eq(RuboCop::CLI::STATUS_ERROR), captured.string
+    expect(captured.string).not_to match(
       /obsolete|has been (removed|renamed|extracted)|unrecognized cop/i,
     )
   end

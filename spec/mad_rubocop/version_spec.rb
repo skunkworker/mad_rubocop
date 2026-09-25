@@ -1,8 +1,8 @@
 require "spec_helper"
 
 RSpec.describe MadRubocop do
-  it "has a semantic version number, optionally with a prerelease suffix" do
-    expect(MadRubocop::VERSION).to match(/\A\d+\.\d+\.\d+(\.[0-9A-Za-z]+)*\z/)
+  it "has a MAJOR.MINOR.PATCH version, optionally with a prerelease suffix" do
+    expect(Gem::Version.new(MadRubocop::VERSION).release.segments.size).to eq(3)
   end
 
   it "matches the version declared in the gemspec" do
