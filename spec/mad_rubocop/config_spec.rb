@@ -10,17 +10,21 @@ require "rubocop"
 # A green suite here is what catches upgrades that rename a cop (e.g. the
 # Naming/PredicateName -> Naming/PredicatePrefix rename in RuboCop 1.88).
 RSpec.describe "MadRubocop configuration" do
-  ROOT = File.expand_path("../..", __dir__)
-  CONFIG_FILE = File.join(ROOT, ".rubocop.yml")
-  COP_CONFIG_FILES = {
-    "disabled_cops.yml" => File.join(ROOT, "lib", "disabled_cops.yml"),
-    "modified_cops.yml" => File.join(ROOT, "lib", "modified_cops.yml"),
+  # Locals, not constants: a constant assigned inside a describe block is
+  # defined on Object and leaks into every other spec. The example blocks
+  # close over these, and cop_config_files is also read at load time to
+  # generate one example per cop, which rules out `let`.
+  root = File.expand_path("../..", __dir__)
+  config_file = File.join(root, ".rubocop.yml")
+  cop_config_files = {
+    "disabled_cops.yml" => File.join(root, "lib", "disabled_cops.yml"),
+    "modified_cops.yml" => File.join(root, "lib", "modified_cops.yml"),
   }.freeze
 
   # Loading the config also loads the rubocop-rails / rubocop-performance
   # plugins declared under `plugins:`, which registers their cops globally.
   before(:all) do
-    RuboCop::ConfigLoader.load_file(CONFIG_FILE)
+    RuboCop::ConfigLoader.load_file(config_file)
   end
 
   def self.cop_names_in(file)
@@ -28,7 +32,7 @@ RSpec.describe "MadRubocop configuration" do
   end
 
   it "loads the top-level config without raising" do
-    expect { RuboCop::ConfigLoader.load_file(CONFIG_FILE) }.not_to raise_error
+    expect { RuboCop::ConfigLoader.load_file(config_file) }.not_to raise_error
   end
 
   it "loads the rubocop-rails and rubocop-performance plugin cops" do
@@ -38,7 +42,7 @@ RSpec.describe "MadRubocop configuration" do
   end
 
   describe "every configured cop is recognized by the installed RuboCop" do
-    COP_CONFIG_FILES.each do |label, file|
+    cop_config_files.each do |label, file|
       context label do
         cop_names_in(file).each do |cop_name|
           it "recognizes #{cop_name}" do
@@ -56,7 +60,7 @@ RSpec.describe "MadRubocop configuration" do
   end
 
   it "runs against a fixture without emitting obsolete/removed-cop warnings" do
-    fixture = File.join(ROOT, "spec", "fixtures", "sample.rb")
+    fixture = File.join(root, "spec", "fixtures", "sample.rb")
 
     # Capture both streams: warnings go to $stderr, and the formatter's
     # report goes to $stdout, which would otherwise leak into spec output.
@@ -68,7 +72,7 @@ RSpec.describe "MadRubocop configuration" do
     $stderr = captured_stderr
     begin
       status = RuboCop::CLI.new.run(
-        ["--config", CONFIG_FILE, "--force-exclusion", "--no-color", fixture],
+        ["--config", config_file, "--force-exclusion", "--no-color", fixture],
       )
     ensure
       $stdout = original_stdout
