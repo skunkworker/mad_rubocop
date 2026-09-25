@@ -58,18 +58,27 @@ RSpec.describe "MadRubocop configuration" do
   it "runs against a fixture without emitting obsolete/removed-cop warnings" do
     fixture = File.join(ROOT, "spec", "fixtures", "sample.rb")
 
-    captured = StringIO.new
+    # Capture both streams: warnings go to $stderr, and the formatter's
+    # report goes to $stdout, which would otherwise leak into spec output.
+    captured_stdout = StringIO.new
+    captured_stderr = StringIO.new
+    original_stdout = $stdout
     original_stderr = $stderr
-    $stderr = captured
+    $stdout = captured_stdout
+    $stderr = captured_stderr
     begin
-      RuboCop::CLI.new.run(
+      status = RuboCop::CLI.new.run(
         ["--config", CONFIG_FILE, "--force-exclusion", "--no-color", fixture],
       )
     ensure
+      $stdout = original_stdout
       $stderr = original_stderr
     end
 
-    expect(captured.string).not_to match(
+    # A removed cop or an invalid config aborts the run with STATUS_ERROR;
+    # offenses in the fixture (STATUS_OFFENSES) are fine.
+    expect(status).not_to eq(RuboCop::CLI::STATUS_ERROR), captured_stderr.string
+    expect(captured_stderr.string).not_to match(
       /obsolete|has been (removed|renamed|extracted)|unrecognized cop/i,
     )
   end
