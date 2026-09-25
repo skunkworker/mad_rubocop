@@ -4,7 +4,7 @@
 
 Custom RuboCop yml files to modify the cops enforced by RuboCop, shared across projects.
 
-Built on RuboCop `~> 1.88`, rubocop-rails `~> 2.35`, and rubocop-performance `~> 1.26`. Requires Ruby `>= 3.1`.
+Built on RuboCop `~> 1.91.0`, rubocop-rails `~> 2.38.0`, and rubocop-performance `~> 1.27.0`. Requires Ruby `>= 3.1`.
 
 ## What's in the box
 
