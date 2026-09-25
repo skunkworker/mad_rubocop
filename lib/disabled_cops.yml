@@ -113,7 +113,7 @@ Naming/HeredocDelimiterCase:
   Enabled: false
 Naming/MemoizedInstanceVariableName:
   Enabled: false
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Enabled: false
 Naming/MethodParameterName:
   Enabled: false

@@ -15,16 +15,15 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/mxenabled/mad_rubocop"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "bin"
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  # Ship only what consumers load via `inherit_gem`; bin/setup is a dev script and stays out.
+  spec.files         = Dir.glob(%w(.rubocop.yml lib/**/*.{rb,yml} CHANGELOG.md LICENSE.txt README.md), :base => __dir__)
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = '>= 2.7.0'
+  spec.required_ruby_version = ">= 3.1"
 
-  spec.add_dependency "rubocop", "~> 1.75"
-  spec.add_dependency "rubocop-performance", "~> 1.25"
-  spec.add_dependency "rubocop-rails", "~> 2.31"
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake"
+  spec.add_dependency "rubocop", "~> 1.91.0"
+  spec.add_dependency "rubocop-performance", "~> 1.27.0"
+  spec.add_dependency "rubocop-rails", "~> 2.38.0"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.0"
 end
