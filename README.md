@@ -57,7 +57,7 @@ Keeping the pinned RuboCop (and its plugins) current is the main maintenance tas
 3. Run `bundle exec rake spec`. The suite fails if the config references a cop that the new RuboCop **renamed or removed** — the failure message names the offending cop.
 4. For each failure, update the cop name in `lib/disabled_cops.yml` / `lib/modified_cops.yml` (or drop it if the cop no longer exists).
 5. Because `NewCops` is disabled, cops **added** in the upgrade are off by default. Review `rubocop --show-cops` (or the release notes) and add any you want to disable/configure.
-6. Bump `MadRubocop::VERSION` in `version.rb`, note the change, and release.
+6. Bump `MadRubocop::VERSION` in `version.rb`, add an entry to `CHANGELOG.md`, and release.
 
 ## Contributing
 

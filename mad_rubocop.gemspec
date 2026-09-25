@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   # Ship only what consumers load via `inherit_gem`; bin/setup is a dev script, not an executable.
-  spec.files         = Dir.glob(%w(.rubocop.yml lib/**/*.{rb,yml} LICENSE.txt README.md), :base => __dir__)
+  spec.files         = Dir.glob(%w(.rubocop.yml lib/**/*.{rb,yml} CHANGELOG.md LICENSE.txt README.md), :base => __dir__)
   spec.executables   = []
   spec.require_paths = ["lib"]
 
